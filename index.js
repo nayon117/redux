@@ -28,5 +28,5 @@ function reducer(state = { amount: 1 }, action) {
 // });
 
 setInterval(() => {
-  store.dispatch({ type: "decrement" });
+  store.dispatch({ type: "incrementByAmount", payload:4 });
 },3000);
