@@ -28,12 +28,12 @@ const history = [];
 // reducer
 function accountReducer(state = { amount: 1 }, action) {
   switch (action.type) {
+    case getAccUserPending:
+      return {...state,pending:true};
     case getAccUserFulfilled:
-      return { amount: action.payload };
-    case getAccUserFulfilled:
-      return { amount: action.payload };
+      return { amount: action.payload, pending:false};
     case getAccUserRejected:
-      return {...state, error:action.error};
+      return {...state, error:action.error, pending:false};
     case inc:
       return { amount: state.amount + 1 };
     case dec:
@@ -74,6 +74,7 @@ function bonusReducer(state = { points: 0 }, action) {
 function getUserAccount(id) {
   return async (dispatch, getState) => {
     try {
+      dispatch(getAccountUserPending());
       const { data } = await axios.get(`http://localhost:3000/accounts/${id}`);
       dispatch(getAccountUserFulfilled(data.amount));
     } catch (error) {
@@ -82,8 +83,8 @@ function getUserAccount(id) {
   };
 }
 
-function getAccountUserPending(value) {
-  return { type: getAccUserPending, payload: value };
+function getAccountUserPending() {
+  return { type: getAccUserPending };
 }
 function getAccountUserFulfilled(value) {
   return { type: getAccUserFulfilled, payload: value };
@@ -105,7 +106,7 @@ function incrementByAmount(value) {
 }
 
 setTimeout(() => {
-  // store.dispatch(getUserAccount(2));
+  store.dispatch(getUserAccount(2));
   // store.dispatch(incrementByAmount(200));
-  store.dispatch(incrementBonus())
+  // store.dispatch(incrementBonus())
 }, 2000);
